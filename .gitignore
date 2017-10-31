@@ -1,0 +1,6 @@
+# ignore all ~ files
+*~
+
+# ignore all files .class .java
+*.class
+*.java

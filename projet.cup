@@ -1,0 +1,64 @@
+//Specification JCup
+import java_cup.runtime.*;
+import java.util.Map;
+import java.util.HashMap;
+
+parser code {:
+  public static void main(String args[]) throws Exception {
+    new parser(new Yylex(System.in)).parse();
+  }
+:}
+
+action code {:
+  public Map<String,Boolean> tab = new HashMap<>();
+
+  //methodes
+  public void affSymbole(String s) {
+    System.out.println( s + " est de valeur " + tab.get(s));
+  }
+
+  public void AfficheTable() {
+    System.out.println("La table contient " + tab.size() + " variables");
+    for (String i : tab.keySet()) 
+      affSymbole(i);
+  }
+:}
+
+terminal OR, AND, NOT, LPAR, RPAR, AFF, PASSL;
+terminal String VAR;
+terminal Boolean BOOL_VAL;
+
+non terminal prog, programme, affect, instr;
+non terminal Boolean Expr;
+
+precedence left NOT, AND, OR;
+
+programme ::= prog {: 
+            System.out.println("Programme correct !"); 
+            AfficheTable(); 
+          :}
+          ;
+
+prog ::= affect prog
+      |instr prog
+      |
+      ;
+
+Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
+        | Expr:e1 AND Expr:e2 {: RESULT=(e1 && e2); :}
+        | Expr:e1 OR Expr:e2 {: RESULT=(e1 || e2); :}
+        | LPAR Expr:e RPAR {: RESULT=e; :}
+        | BOOL_VAL: b {: RESULT = b; :}
+        ;
+
+affect ::= VAR:id AFF Expr:e {: 
+            if(tab.containsKey(id))
+              System.out.println("La variable " + id + " existe deja !");
+            else
+              tab.put(id,e);
+        :}
+        ;
+
+instr ::= Expr PASSL
+        | affect PASSL
+        ;
