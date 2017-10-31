@@ -14,7 +14,7 @@ action code {:
 
   //methodes
   public void affSymbole(String s) {
-    System.out.println( s + " est de valeur " + tab.get(s));
+    System.out.println( s + " = " + tab.get(s));
   }
 
   public void AfficheTable() {
@@ -24,25 +24,27 @@ action code {:
   }
 :}
 
-terminal OR, AND, NOT, LPAR, RPAR, AFF, PASSL;
+terminal OR, AND, NOT, LPAR, RPAR, AFF, EOL, PRINT, EXIT;
 terminal String VAR;
 terminal Boolean BOOL_VAL;
 
-non terminal prog, programme, affect, instr;
+non terminal prog, programme, affect, instr, print, expr;
 non terminal Boolean Expr;
 
 precedence left NOT, AND, OR;
 
-programme ::= prog {: 
-            System.out.println("Programme correct !"); 
-            AfficheTable(); 
-          :}
-          ;
+programme ::= {: 
+          System.out.println("Programm start here : "); 
+        :} prog
+        ;
 
 prog ::= affect prog
-      |instr prog
-      |
-      ;
+        | instr prog
+        | EXIT EOL {: 
+              System.out.println("Bye !"); 
+            :}
+        |
+        ;
 
 Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
         | Expr:e1 AND Expr:e2 {: RESULT=(e1 && e2); :}
@@ -51,14 +53,24 @@ Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
         | BOOL_VAL: b {: RESULT = b; :}
         ;
 
+expr ::= Expr:e {: System.out.println(e); :}
+        ;
+
 affect ::= VAR:id AFF Expr:e {: 
-            if(tab.containsKey(id))
-              System.out.println("La variable " + id + " existe deja !");
-            else
-              tab.put(id,e);
+          if(tab.containsKey(id))
+            System.out.println("La variable " + id + " existe deja !");
+          else
+            tab.put(id,e);
         :}
         ;
 
-instr ::= Expr PASSL
-        | affect PASSL
+print ::= PRINT {: 
+          System.out.println("Les valeurs des variables sont : "); 
+          AfficheTable();
+        :}
+        ;
+
+instr ::= expr EOL
+        | affect EOL
+        | print EOL
         ;

@@ -1,4 +1,7 @@
+true and false
 a = true
 b = false
-c = non (true ou false) et true
-true ou false
+c = not (true or false) and true
+true or false
+PRINT
+^d
