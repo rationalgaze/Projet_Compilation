@@ -18,7 +18,7 @@ action code {:
   }
 
   public void AfficheTable() {
-    System.out.println("La table contient " + tab.size() + " variables");
+    System.out.println("The table contains " + tab.size() + " variables");
     for (String i : tab.keySet()) 
       affSymbole(i);
   }
@@ -50,7 +50,12 @@ Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
         | Expr:e1 AND Expr:e2 {: RESULT=(e1 && e2); :}
         | Expr:e1 OR Expr:e2 {: RESULT=(e1 || e2); :}
         | LPAR Expr:e RPAR {: RESULT=e; :}
-        | BOOL_VAL: b {: RESULT = b; :}
+        | VAR:v {: if(!tab.containsKey(v))
+                      System.out.println("Variable " + v + "not declared");
+                   else
+                      RESULT = tab.get(v);
+                :}
+        | BOOL_VAL:b {: RESULT = b; :}
         ;
 
 expr ::= Expr:e {: System.out.println(e); :}
@@ -65,7 +70,6 @@ affect ::= VAR:id AFF Expr:e {:
         ;
 
 print ::= PRINT {: 
-          System.out.println("Les valeurs des variables sont : "); 
           AfficheTable();
         :}
         ;
