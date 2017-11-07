@@ -15,10 +15,10 @@ CUP: CUP
 	$(JCC) $(JFLAGS) parser.java sym.java Yylex.java
 
 parser: parser
-	$(JCup) projet.cup
+	$(JCup) projet_Vorotnikov_2017.cup
 
 Yylex: Yylex
-	$(JFlex) projet.lex
+	$(JFlex) projet_Vorotnikov_2017.lex
 
 
 lex: jf class

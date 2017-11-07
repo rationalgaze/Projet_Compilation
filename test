@@ -1,8 +1,13 @@
 true and false
-a = false
+az = false
+ar2_ = true
 false or not a
 b = false and not (a or true)
 c = not b or a
 true or not false
+i=
+! == != >= <= > < || && 
+' " 
+vrai ou faux
 PRINT
 ^d

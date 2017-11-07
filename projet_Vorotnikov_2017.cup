@@ -18,7 +18,7 @@ action code {:
   }
 
   public void AfficheTable() {
-    System.out.println("The table contains " + tab.size() + " variables");
+    System.out.println("\nThe table contains " + tab.size() + " variables");
     for (String i : tab.keySet()) 
       affSymbole(i);
   }
@@ -38,8 +38,7 @@ programme ::= {:
         :} prog
         ;
 
-prog ::= affect prog
-        | instr prog
+prog ::= instr prog
         | EXIT EOL {: 
               System.out.println("Bye !"); 
             :}
@@ -47,13 +46,16 @@ prog ::= affect prog
         ;
 
 Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
-        | Expr:e1 AND Expr:e2 {: RESULT=(e1 && e2); :}
+        | Expr:e1 AND Expr:e2 {: RESULT=(e1 && e2);:}
         | Expr:e1 OR Expr:e2 {: RESULT=(e1 || e2); :}
         | LPAR Expr:e RPAR {: RESULT=e; :}
-        | VAR:v {: if(!tab.containsKey(v))
-                      System.out.println("Variable " + v + "not declared");
-                   else
-                      RESULT = tab.get(v);
+        | VAR:v {: 
+                  if(!tab.containsKey(v)){
+                    System.out.println("ERROR: Variable <" + v + "> not identified");
+                    RESULT = true;
+                  }
+                  else
+                    RESULT = tab.get(v);
                 :}
         | BOOL_VAL:b {: RESULT = b; :}
         ;
@@ -61,11 +63,9 @@ Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
 expr ::= Expr:e {: System.out.println(e); :}
         ;
 
-affect ::= VAR:id AFF Expr:e {: 
-          if(tab.containsKey(id))
-            System.out.println("La variable " + id + " existe deja !");
-          else
-            tab.put(id,e);
+affect ::= VAR:id AFF Expr:e {:
+          tab.put(id,e);
+          System.out.println(id+" equals "+e);
         :}
         ;
 
@@ -77,4 +77,6 @@ print ::= PRINT {:
 instr ::= expr EOL
         | affect EOL
         | print EOL
+        | EOL
+        | error:e {: parser.report_error("Syntax error",e); :} EOL
         ;
