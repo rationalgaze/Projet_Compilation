@@ -5,6 +5,7 @@ false or not a
 b = false and not (a or true)
 c = not b or a
 true or not false
+e = ()
 i=
 ! == != >= <= > < || && 
 ' " 

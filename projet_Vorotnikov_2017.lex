@@ -37,5 +37,5 @@ PRINT         {return new Symbol(sym.PRINT);}
 {VAR}         {return new Symbol(sym.VAR, new String(yytext()));}
 
 \r|\n|\r\n    {return new Symbol(sym.EOL);}
-[ \t\f]       ava{}
+[ \t\f]       {}
 .             {error("Illegal character <'"+ yytext()+"'>"); }
