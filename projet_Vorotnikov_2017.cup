@@ -13,14 +13,10 @@ action code {:
   public Map<String,Boolean> tab = new HashMap<>();
 
   //methodes
-  public void affSymbole(String s) {
-    System.out.println( s + " = " + tab.get(s));
-  }
-
   public void AfficheTable() {
     System.out.println("\nThe table contains " + tab.size() + " variables");
     for (String i : tab.keySet()) 
-      affSymbole(i);
+      System.out.println( i + " = " + tab.get(i));
   }
 :}
 
@@ -39,10 +35,18 @@ programme ::= {:
         ;
 
 prog ::= instr prog
-        | EXIT EOL {: 
-              System.out.println("Bye !"); 
-            :}
+        | EXIT {: 
+              System.out.println("Bye !");
+              System.exit(-9);
+            :} EOL
         |
+        ;
+
+instr ::= expr EOL
+        | affect EOL
+        | print EOL
+        | EOL
+        | error:e {: parser.report_error("Syntax error",e); :} EOL
         ;
 
 Expr ::= NOT Expr:e1 {: RESULT= (!e1); :}
@@ -74,9 +78,3 @@ print ::= PRINT {:
         :}
         ;
 
-instr ::= expr EOL
-        | affect EOL
-        | print EOL
-        | EOL
-        | error:e {: parser.report_error("Syntax error",e); :} EOL
-        ;

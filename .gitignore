@@ -1,6 +1,8 @@
 # ignore all ~ files
 *~
 
-# ignore all files .class .java
+# ignore all files .class .java & .pdf
 *.class
 *.java
+*.pdf
+*.7z
